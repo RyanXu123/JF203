@@ -27,7 +27,7 @@ public class RealData_203_controller {
 
         //        kt2
         List<Map<String, Object>> list_all = new ArrayList<>();
-        String sql20_sf = "  select * from realdata_once where Location='JF203' and Equipment='空调0' and time = ( SELECT MAX(time) FROM realdata_once )";//从表中筛选某空调的所有参数
+        String sql20_sf = "  select * from realdata_once where Location='JF203' and Equipment='空调0' and time = ( SELECT time FROM realdata_once  order by id desc limit 0,1)";//从表中筛选某空调的所有参数
         TreeMap<Integer, Object> kt_all = new TreeMap<>();
         for (Integer i = 1; i <= 13; i++) {
             String sql_temp = sql20_sf.replace("空调0", "空调" + i);   //遍历所有空调 1，2....20
@@ -80,7 +80,7 @@ public class RealData_203_controller {
         List<String> server = Arrays.asList("A","B","C","D","E","F","G","H","J","K");
 //        String sql="select Value0 from realdata_once where Location='JF203' and Equipment='服务器A' and SiteName='A01-上' and time = ( SELECT MAX(time) FROM realdata_once ) limit 0,1";
 
-        String sql1="select * from realdata_once where Location='JF203' and Equipment='服务器' and time = ( SELECT MAX(time) FROM realdata_once ) limit 0,58";//一个时刻数据
+        String sql1="select * from realdata_once where Location='JF203' and Equipment='服务器' and time = ( SELECT time FROM realdata_once  order by id desc limit 0,1)";//一个时刻数据
 
         Map<String, Object> servers_cold= new TreeMap<>();  //所有列列服务器冷通道
         Map<String, Object> servers_hot= new TreeMap<>();  //某列服务器冷通道

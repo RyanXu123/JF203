@@ -44,21 +44,11 @@ public class AiParams_203_controller {
 //        temp3.put("id",3);
         temp1.put("AI群控控制周期",ai_time);
 //        temp3.put("Value0",ai_time);
-        temp1.put("送风上阈值",sf_up_set);
-        temp1.put("送风下阈值",sf_down_set);
+        temp1.put("送风上阈值范围",sf_up_set);
+        temp1.put("送风下阈值范围",sf_down_set);
 //        temp1.put("送风调整梯度",sf_range);
 //        Collections.sort(cold_range);
 //        temp1.put("冷通道分段阈值",cold_rang);
-        String sql_insert="insert into log(content,userName,userRole,time) values('AI群控控制周期修改为30分钟','user123','root','20231115 21：57');" ;
-        String sql_insert1="insert into log(content,userName,userRole,time) values('AI群控控制范围修改为正负1度','user123','root','20231115 21：57');" ;
-        String sql_insert2="insert into log(content,userName,userRole,time) values('热点检查阈值修改为26.5度','user123','root','20231115 21：57');" ;
-        String sql_insert3="insert into log(content,userName,userRole,time) values('送风上阈值修改为24度','user123','root','20231115 21：57');" ;
-        String sql_insert4="insert into log(content,userName,userRole,time) values('送风下阈值修改为26度','user123','root','20231115 21：57');" ;//死数据，之后根据前端的数据进替换
-        jdbc.execute(sql_insert);
-        jdbc.execute(sql_insert1);
-        jdbc.execute(sql_insert2);
-        jdbc.execute(sql_insert3);
-        jdbc.execute(sql_insert4);
 
         return temp1;
     }
@@ -83,6 +73,7 @@ public class AiParams_203_controller {
         String userRole = userInfo.getString("userRole");
         String timeOperate = userInfo.getString("time_operate");
 
+
         // 检查并更新全局变量及数据库
         checkAndUpdate("热点检查阈值更改为", hot_max, newHotMax, userName, userRole, timeOperate);
         checkAndUpdate("AI群控控制范围更改为", ai_range, newAiRange, userName, userRole, timeOperate);
@@ -94,8 +85,8 @@ public class AiParams_203_controller {
         ret.put("热点检查阈值", newHotMax);
         ret.put("AI群控控制范围", newAiRange);
         ret.put("AI群控控制周期", newAiTime);
-        ret.put("送风上阈值", newSfUpSet);
-        ret.put("送风下阈值", newSfDownSet);
+        ret.put("送风上阈值范围", newSfUpSet);
+        ret.put("送风下阈值范围", newSfDownSet);
 
         return ret;
     }
@@ -121,19 +112,17 @@ public class AiParams_203_controller {
             }
 
             // 写入数据库
-            String sql_insert = "INSERT INTO log(content, userName, userRole, time) VALUES('" + key + newValue + "','" + userName + "','" + userRole + "','" + timeOperate + "');";
+            String sql_insert = "INSERT INTO log(content, userName, userRole, time, datacenter_room) VALUES('" + key + newValue + "','" + userName + "','" + userRole + "','" + timeOperate + "','JF203');";
             jdbc.execute(sql_insert);
         }
     }
 
 
     String openAi="0";
-    String content="0";
-    String time="0";
     String restart="0";
 //    private String userName = "user123"; // 默认用户名
 //    private String userRole = "admin";   //默认用户权限
-    private String aiOpenTime; //AI打开时设置
+    private String aiopenlogTime; //AI打开时设置
     @CrossOrigin
     @RequestMapping("/getData/203/aicontrol")
     @ResponseBody
@@ -143,20 +132,6 @@ public class AiParams_203_controller {
         ret.add(openAi);
         ret.add(restart);
 
-
-
-
-//        ret.add(Enengy);
-//        ret.add(content);
-//        ret.add(time);
-//        ret.add(userName);
-//        ret.add(userRole);
-//        ret.add(time);  //注释的这些是传到网页上的，不是写入数据库的，这是两回事
-
-        //这里是写入数据库语句
-        String sql_insert="insert into log(content,userName,userRole,time) values('一键恢复启动','user123','root','20231115 21：57');" ;//死数据，之后根据前端的数据进替换
-        jdbc.execute(sql_insert);
-//        System.out.println("get request restart: "+restart);
         return  ret;
     }
 
@@ -165,44 +140,47 @@ public class AiParams_203_controller {
     @ResponseBody
 //    @Scheduled(fixedRate = 30000)
     public List<String> aicontrol2(@RequestBody List<String> data) {
-        String aiopen = "";
-        String reboot = "";
+        String aiopenlog = "";
+        String rebootlog = "";
 
-        openAi = data.get(0).toString();
-        restart = data.get(1).toString();
+        String openAiTemp = data.get(0).toString();
+        String restartTemp = data.get(1).toString();
         //return data;
-
-        if (restart.equals("1")) {
-            reboot = "一键重启关闭";
-        } else if (restart.equals("0")) {
-            reboot = "一键重启开启";
-        }
-
-        if (openAi.equals("1")) {
-            aiopen = "ai开启";
-        } else if (openAi.equals("0")) {
-            aiopen = "ai关闭";
-        }
-
-        //这是接口传输
-//        content =data.get(0).toString();  //保存更改的ai控制状态数据
-//
-//        userName =data.get(1).toString(); //操作用户
-//        time = data.get(2).toString();//操作时间
-//        userRole = data.get(3).toString();//操作角色
-////        System.out.println(restart);
         String userName = data.get(2).toString();
         String userRole = data.get(3).toString();
         String time_operate = data.get(4).toString();
 
+        if (restartTemp.equals("1")) {
+            rebootlog = "一键恢复开启";
+            if (!restartTemp.equals(restart)){
+                String sql_insert1 = "insert into log(content, userName, userRole, time, datacenter_room) values('" + rebootlog + "','" + userName + "','" + userRole + "','" + time_operate + "','JF203');";
+                jdbc.execute(sql_insert1);
+            }
 
-        //这是写入数据库
-        String sql_insert = "insert into log(content, userName, userRole, time) values('" + aiopen + "','" + userName + "','" + userRole + "','" + time_operate + "');";
-        jdbc.execute(sql_insert);
+        } else if (restartTemp.equals("0")) {
+            rebootlog = "一键恢复关闭";
+            if (!restartTemp.equals(restart)){
+                String sql_insert1 = "insert into log(content, userName, userRole, time, datacenter_room) values('" + rebootlog + "','" + userName + "','" + userRole + "','" + time_operate + "','JF203');";
+                jdbc.execute(sql_insert1);
+            }
+        }
+        restart=restartTemp;
 
-        String sql_insert1 = "insert into log(content, userName, userRole, time) values('" + reboot + "','" + userName + "','" + userRole + "','" + time_operate + "');";
-        jdbc.execute(sql_insert1);
 
+        if (openAiTemp.equals("1")) {
+            aiopenlog = "AI开启";
+            if (!openAiTemp.equals(openAi)){
+                String sql_insert = "insert into log(content, userName, userRole, time, datacenter_room) values('" + aiopenlog + "','" + userName + "','" + userRole + "','" + time_operate + "','JF203');";
+                jdbc.execute(sql_insert);
+            }
+        } else if (openAiTemp.equals("0")) {
+            aiopenlog = "AI关闭";
+            if (!openAiTemp.equals(openAi)){
+                String sql_insert = "insert into log(content, userName, userRole, time, datacenter_room) values('" + aiopenlog + "','" + userName + "','" + userRole + "','" + time_operate + "','JF203');";
+                jdbc.execute(sql_insert);
+            }
+        }
+        openAi=openAiTemp;
         return data;
     }
 
