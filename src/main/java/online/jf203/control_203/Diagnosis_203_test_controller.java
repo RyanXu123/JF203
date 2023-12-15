@@ -1,8 +1,11 @@
 package online.jf203.control_203;
 
+import com.alibaba.fastjson2.JSONObject;
 import online.jf203.entity.Alert;
 import online.jf203.entity.Sitecold;
+import online.jf203.entity.log;
 import online.jf203.mapper.SitecoldMapper;
+import online.jf203.mapper.logMapper;
 import online.jf203.service.AlertService;
 import online.jf203.service.SitecoldService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -255,17 +258,112 @@ public class Diagnosis_203_test_controller {
         ret.add(lnfj_range);
         return ret;
     }
+    @Autowired
+    private logMapper logMapper;
 
     @CrossOrigin
     @PostMapping("/getData/203/realdata/diagnosis_kt_design")
     @ResponseBody
 //    @Scheduled(fixedRate = 30000)
-    public List <List<Double>> diagnosis_design2(@RequestBody List <List<Double>> data){
-        sf_range =(List<Double>)data.get(0);
-        hf_range =(List<Double>)data.get(1);
-        ysj_range =(List<Double>)data.get(2);
-        fj_range =(List<Double>)data.get(3);
-        lnfj_range =(List<Double>)data.get(4);
+    public JSONObject diagnosis_design2(@RequestBody JSONObject data){
+        //输入数据库的数据
+        String sfrangeLog = "";
+        String hfrangeLog = "";
+        String ysjrangeLog = "";
+        String fjrangeLog = "";
+        String lnfjrangeLog = "";
+
+        List<List<Double>> params_diagnosis_design=(List<List<Double>>) data.get("params");
+
+        List<String> user_diagnosis_design= (List<String>)data.get("user");
+
+        List<Double> sfRange = params_diagnosis_design.get(0);
+        List<Double> hfRange =  params_diagnosis_design.get(1);
+        List<Double> ysjRange = params_diagnosis_design.get(2);
+        List<Double> fjRange =  params_diagnosis_design.get(3);
+        List<Double> lnfjRange =  params_diagnosis_design.get(4);
+
+        String userName = user_diagnosis_design.get(0).toString();
+        String userRole = user_diagnosis_design.get(1).toString();
+        String time_operate = user_diagnosis_design.get(2).toString();
+
+
+//送风范围
+        if (!sfRange.equals(sf_range)) {
+            sfrangeLog ="送风温度范围改变为";
+
+                log log1 = new log();
+                log1.setDatacenter_room("JF203");
+                log1.setContent(sfrangeLog + sfRange);
+                log1.setUserName(userName);
+                log1.setUserRole(userRole);
+                log1.setTime(time_operate);
+
+                logMapper.insert(log1);
+            }
+
+        sf_range = sfRange;
+
+        //回风温度范围
+        if (!hfRange.equals(hf_range)) {
+            hfrangeLog ="回风温度范围改变为";
+
+                log log1 = new log();
+                log1.setDatacenter_room("JF203");
+                log1.setContent(hfrangeLog + hfRange);
+                log1.setUserName(userName);
+                log1.setUserRole(userRole);
+                log1.setTime(time_operate);
+
+                logMapper.insert(log1);
+            }
+
+        hf_range =hfRange;
+
+        //压缩机温度范围
+        if (!ysjRange.equals(ysj_range)) {
+            ysjrangeLog ="压缩机温度范围改变为";
+
+                log log1 = new log();
+                log1.setDatacenter_room("JF203");
+                log1.setContent(ysjrangeLog + ysjRange);
+                log1.setUserName(userName);
+                log1.setUserRole(userRole);
+                log1.setTime(time_operate);
+
+                logMapper.insert(log1);
+            }
+
+        ysj_range =ysjRange;
+        if (!fjRange.equals(fj_range)) {
+            fjrangeLog ="风机温度范围改变为";
+
+                log log1 = new log();
+                log1.setDatacenter_room("JF203");
+                log1.setContent(fjrangeLog + fjRange);
+                log1.setUserName(userName);
+                log1.setUserRole(userRole);
+                log1.setTime(time_operate);
+
+                logMapper.insert(log1);
+            }
+        fj_range =fjRange;
+
+        //冷凝风机温度范围
+         if (!lnfjRange.equals(lnfj_range)) {
+            lnfjrangeLog ="冷凝风机温度范围改变为";
+
+                log log1 = new log();
+                log1.setDatacenter_room("JF203");
+                log1.setContent(lnfjrangeLog + lnfjRange);
+                log1.setUserName(userName);
+                log1.setUserRole(userRole);
+                log1.setTime(time_operate);
+
+                logMapper.insert(log1);
+            }
+
+        lnfj_range =lnfjRange;
         return data;
     }
 
@@ -285,31 +383,6 @@ public class Diagnosis_203_test_controller {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Autowired
     private AlertService alertservice;
 
@@ -324,10 +397,53 @@ public class Diagnosis_203_test_controller {
     @PostMapping("/getData/203/realdata/diagnosis_server_design")
     @ResponseBody
 //    @Scheduled(fixedRate = 30000)
-    public List <List<Double>> diagnosis_server_design2(@RequestBody List <List<Double>> data){
-//        List <List<Double>> ret =new ArrayList<>();
-        cold_range =(List<Double>) data.get(0);
-        hot_range =(List<Double>) data.get(1);
+    public JSONObject diagnosis_server_design2(@RequestBody JSONObject data){
+        String coldrangeLog = "";
+        String hotrangeLog = "";
+
+        List<List<Double>> params_diagnosis_server_design=(List<List<Double>>) data.get("params");
+
+        List<String> user_diagnosis_server_design= (List<String>)data.get("user");
+
+
+
+        List<Double> coldRange=params_diagnosis_server_design.get(0);
+        List<Double> hotRange =params_diagnosis_server_design.get(1);
+
+        String userName = user_diagnosis_server_design.get(0).toString();
+        String userRole = user_diagnosis_server_design.get(1).toString();
+        String time_operate = user_diagnosis_server_design.get(2).toString();
+
+        if (!coldRange.equals(cold_range)) {
+            coldrangeLog ="冷通道正常阈值范围改变为";
+
+                log log1 = new log();
+                log1.setDatacenter_room("JF203");
+                log1.setContent(coldrangeLog + coldRange );
+                log1.setUserName(userName);
+                log1.setUserRole(userRole);
+                log1.setTime(time_operate);
+
+                logMapper.insert(log1);
+            }
+
+        cold_range =coldRange;
+
+         if (!hotRange.equals(hot_range)) {
+            hotrangeLog ="热通道正常阈值范围改变为";
+
+                log log1 = new log();
+                log1.setDatacenter_room("JF203");
+                log1.setContent(hotrangeLog + hotRange);
+                log1.setUserName(userName);
+                log1.setUserRole(userRole);
+                log1.setTime(time_operate);
+
+                logMapper.insert(log1);
+            }
+        hot_range =hotRange;
         return data;
+
     }
+
 }

@@ -21,11 +21,11 @@ public class UpsAlert_203_controller {
         String sql="select * from ups_reasonable ORDER BY id DESC limit 0,1";
         List<Map<String,Object>> list_ups=jdbc.queryForList(sql);
         String ret="0";
-        for (Map<String,Object> ups:list_ups) {
-            ret=ups.get("Value0").toString();
-//            System.out.println("upsAlert is "+ret);
-//            return ret;
-        }
+//        for (Map<String,Object> ups:list_ups) {
+//            ret=ups.get("Value0").toString();
+////            System.out.println("upsAlert is "+ret);
+////            return ret;
+//        }
         return ret;//默认ups正常
     }
 }
