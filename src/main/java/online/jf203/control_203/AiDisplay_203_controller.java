@@ -22,11 +22,9 @@ public class AiDisplay_203_controller {
     @ResponseBody
 //    @Scheduled(fixedRate = 30000)
     public Map<String,Object> aidisplay(){
-        String sql="select * from aidisplay where time=( select time from aidisplay order by id desc";
+        String sql="select * from aidisplay where time=( select MAX(time) from aidisplay )";
         List <Map<String,Object>> list=jdbc.queryForList(sql);
-       Map<String,Object> ret= new HashMap<>();
-        LinkedHashMap<String,Object> ai= new LinkedHashMap<>();
-
+        Map<String,Object> ret= new HashMap<>();
         List <String> jf_hot= new ArrayList<>();
 
         for(Map<String,Object> c:list){

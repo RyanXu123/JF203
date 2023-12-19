@@ -118,7 +118,7 @@ public class AiParams_203_controller {
     }
 
 
-    String openAi="0";
+    String openAi="1";
     String restart="0";
 //    private String userName = "user123"; // 默认用户名
 //    private String userRole = "admin";   //默认用户权限
@@ -324,13 +324,10 @@ public class AiParams_203_controller {
 
         Map<String,Object> m=new LinkedHashMap<>();
         m.put("热点检查阈值",hot_max);
-//        m.put("AI预控控制范围","2℃");
         m.put("AI群控控制范围",ai_range);
         m.put("AI群控控制周期",ai_time);
         m.put("送风上阈值",sf_up_set);
         m.put("送风下阈值",sf_down_set);
-//        m.put("送风调整梯度",sf_range);
-//        m.put("冷通道分段阈值",Arrays.asList(Arrays.asList(cold_range.get(0),cold_range.get(1)),Arrays.asList(cold_range.get(2),cold_range.get(3)),Arrays.asList(cold_range.get(4),cold_range.get(5)),Arrays.asList(cold_range.get(6),cold_range.get(7))));
         m.put("AI控制开关",openAi);
         m.put("恢复初始值",restart);
         m.put("冷通道偏差",coldsite_gap);

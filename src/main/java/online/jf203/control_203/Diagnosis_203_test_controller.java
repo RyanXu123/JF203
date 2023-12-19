@@ -380,19 +380,6 @@ public class Diagnosis_203_test_controller {
         return ret;
     }
 
-
-
-
-    @Autowired
-    private AlertService alertservice;
-
-    @Autowired(required=false)
-    private SitecoldService scService;
-    @Autowired
-    private SitecoldMapper sitecoldmapper;
-
-
-
     @CrossOrigin
     @PostMapping("/getData/203/realdata/diagnosis_server_design")
     @ResponseBody

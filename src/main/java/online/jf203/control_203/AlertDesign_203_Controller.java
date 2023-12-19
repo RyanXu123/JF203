@@ -247,9 +247,9 @@ public class AlertDesign_203_Controller {
         List<String> server = Arrays.asList("A","B","C","D","E","F","G","H","J","K");
         Collections.reverse(server);//从K开始排序
 
-        String sql_penultimate="select * from realdata_once where Location='JF203' and Equipment='服务器' and PointName='冷通道温度'  and time = ( SELECT time FROM realdata_once order by time desc limit 1 OFFSET 60)"; //19测点x3+功率
-        String sql_last="select * from realdata_once where Location='JF203' and Equipment='服务器' and PointName='冷通道温度' and time = ( SELECT MAX(time) FROM realdata_once)"; //19测点x3+功率
-
+        String sql_penultimate="select * from realdata_once where Location='JF203' and Equipment='服务器' and PointName='冷通道温度'  and time = ( SELECT time FROM realdata_once order by id desc limit 1 OFFSET 60 )"; //60数据间隔
+        String sql_last="select * from realdata_once where Location='JF203' and Equipment='服务器' and PointName='冷通道温度' and time = ( SELECT time FROM realdata_once order by id desc limit 1)"; //19测点x3+功率
+        sql_penultimate.replace("60",cold_unstable_fixed_time_real.toString());
         Map<String, Object> servers_cold= new TreeMap<>();  //所有列列服务器冷通道
         Integer siteNum=19;//测点个数
 

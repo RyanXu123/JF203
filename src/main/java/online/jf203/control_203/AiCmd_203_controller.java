@@ -67,15 +67,6 @@ public class AiCmd_203_controller {
         List <Map<String,Object>> list=jdbc.queryForList(sql);
 
 
-//        List <Map<String,Object>> list2=jdbc.queryForList(sql2);
-//        Map<String,Object> ret= new HashMap<>();
-
-
-
-
-//        Integer cnt_beat=0;
-//        Integer cnt_null=0;
-//        List<Map<String,Object>> list_temp_cmd = new ArrayList<>();  //AI指令寄存器
         return list;
     }
 
