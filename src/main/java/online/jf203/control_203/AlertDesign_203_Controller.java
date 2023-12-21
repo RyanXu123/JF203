@@ -247,9 +247,10 @@ public class AlertDesign_203_Controller {
         List<String> server = Arrays.asList("A","B","C","D","E","F","G","H","J","K");
         Collections.reverse(server);//从K开始排序
 
-        String sql_penultimate="select * from realdata_once where Location='JF203' and Equipment='服务器' and PointName='冷通道温度'  and time = ( SELECT time FROM realdata_once order by id desc limit 1 OFFSET 60 )"; //60数据间隔
+        String sql_penultimate="select * from realdata_once where Location='JF203' and Equipment='服务器' and PointName='冷通道温度'  and time = ( SELECT time FROM realdata_once order by id desc limit 1 OFFSET 60)"; //60数据间隔
         String sql_last="select * from realdata_once where Location='JF203' and Equipment='服务器' and PointName='冷通道温度' and time = ( SELECT time FROM realdata_once order by id desc limit 1)"; //19测点x3+功率
         sql_penultimate.replace("60",cold_unstable_fixed_time_real.toString());
+
         Map<String, Object> servers_cold= new TreeMap<>();  //所有列列服务器冷通道
         Integer siteNum=19;//测点个数
 
@@ -257,11 +258,11 @@ public class AlertDesign_203_Controller {
         for (String c:server) {  //遍历服务器 c为（"A","B","C","D" ...）
 
 
-            sql_penultimate=sql_penultimate.replace("'服务器'", "'服务器" + c + "'"); //某服务器所有测点
-            sql_last=sql_last.replace("'服务器'", "'服务器" + c + "'");
+             String currentsql_penultimate=sql_penultimate.replace("'服务器'", "'服务器" + c + "'"); //某服务器所有测点
+            String currentsql_last=sql_last.replace("'服务器'", "'服务器" + c + "'");
 
-            List<Map<String, Object>> list_penultimate = jdbc.queryForList(sql_penultimate);
-            List<Map<String, Object>> list_last = jdbc.queryForList(sql_last);
+            List<Map<String, Object>> list_penultimate = jdbc.queryForList(currentsql_penultimate);
+            List<Map<String, Object>> list_last = jdbc.queryForList(currentsql_last);
 
             List<Double> server_site_cold_up = new ArrayList<>(); //某列服务器冷通道上测点
             List<Double> server_site_cold_down = new ArrayList<>();  //某列服务器冷通道下测点
@@ -303,13 +304,17 @@ public class AlertDesign_203_Controller {
                         }
                     }
                 }
+               // List<Double> server_site_cold_up_temp = server_site_cold_up; //某列服务器冷通道上测点
+                //List<Double> server_site_cold_down_temp = server_site_cold_down;  //某列服务器冷通道下测点
+
                 Map<String, Object> site_cold = new TreeMap<>(); //冷通道
                 site_cold.put("up", server_site_cold_up); //某列服务器所有上测点  （up，{服务器所有测点（1，22）（2，22）..}）
                 site_cold.put("down", server_site_cold_down);//某列服务器所有下测点  （down，{服务器所有测点（1，22）（2，22）..}）
                 servers_cold.put(c, site_cold); //冷通道（A，{(avg,xx),(sitedetail,xx)}）
             }
+
         }
-        list_data.add(servers_cold);
+        list_data.add(new TreeMap<>(servers_cold));
 
         return list_data;
     }

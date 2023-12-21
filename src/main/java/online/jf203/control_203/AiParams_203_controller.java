@@ -118,7 +118,7 @@ public class AiParams_203_controller {
     }
 
 
-    String openAi="1";
+    String openAi="0";
     String restart="0";
 //    private String userName = "user123"; // 默认用户名
 //    private String userRole = "admin";   //默认用户权限
