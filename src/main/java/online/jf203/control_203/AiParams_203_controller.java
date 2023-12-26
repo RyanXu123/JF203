@@ -2,15 +2,27 @@ package online.jf203.control_203;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import online.jf203.service.AlertService;
+import online.jf203.service.frontenddataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
+import online.jf203.mapper.frontenddataMapper;
+import online.jf203.entity.frontenddata;
+import org.springframework.web.bind.annotation.RequestParam;
+import online.jf203.entity.frontenddata;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
 @Controller
 public class AiParams_203_controller {
+    @Autowired
+    private frontenddataMapper frontenddatamapper;
+    @Autowired
+    private frontenddataService frontenddataservice;
 
     String hot_max="26.5";
     String ai_range="1";
@@ -118,22 +130,45 @@ public class AiParams_203_controller {
     }
 
 
-    String openAi="0";
-    String restart="0";
+//    String openAi="0";
+//    String restart="0";
 //    private String userName = "user123"; // 默认用户名
 //    private String userRole = "admin";   //默认用户权限
+    private String getOpenAiValue() {
+    QueryWrapper<frontenddata> queryWrapper = new QueryWrapper<>();
+    queryWrapper.eq("content", "openAi");
+    frontenddata data = frontenddatamapper.selectOne(queryWrapper);
+    return data.getValue0().toString();
+}
+    private String getRestartValue() {
+        QueryWrapper<frontenddata> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("content", "restart");
+        frontenddata data = frontenddatamapper.selectOne(queryWrapper);
+        return data.getValue0().toString();
+    }
+
+
+
     private String aiopenlogTime; //AI打开时设置
     @CrossOrigin
     @RequestMapping("/getData/203/aicontrol")
     @ResponseBody
 //    @Scheduled(fixedRate = 30000)
     public List<String> aicontrol1(){
+
+        String openAi = getOpenAiValue();
+        String restart = getRestartValue();
+
         List ret= new ArrayList<>();
         ret.add(openAi);
         ret.add(restart);
 
         return  ret;
     }
+
+
+
+
 
     @CrossOrigin
     @PostMapping("/getData/203/aicontrol")
@@ -145,10 +180,31 @@ public class AiParams_203_controller {
 
         String openAiTemp = data.get(0).toString();
         String restartTemp = data.get(1).toString();
-        //return data;
+
         String userName = data.get(2).toString();
         String userRole = data.get(3).toString();
         String time_operate = data.get(4).toString();
+
+        String locationvalue ="JF203";
+        String openai ="openAi";
+        String reStart = "restart";
+
+        String openAi = getOpenAiValue();
+        String restart = getRestartValue();
+
+        UpdateWrapper<frontenddata> updateWrapperAi = new UpdateWrapper<>();
+        updateWrapperAi.eq("content", openai)
+                .set("value0",openAiTemp)
+                .set("location", locationvalue)
+                .set("time",time_operate);
+        frontenddatamapper.update(null, updateWrapperAi);
+
+        UpdateWrapper<frontenddata> updateWrapperRestart = new UpdateWrapper<>();
+        updateWrapperRestart.eq("content", reStart)
+                .set("value0", restartTemp)
+                .set("location", locationvalue)
+                .set("time", time_operate);
+        frontenddatamapper.update(null, updateWrapperRestart);
 
         if (restartTemp.equals("1")) {
             rebootlog = "一键恢复开启";
@@ -183,12 +239,14 @@ public class AiParams_203_controller {
         openAi=openAiTemp;
         return data;
     }
-
-    @CrossOrigin
     @PostMapping("/AI_data")
     @ResponseBody
 //    @Scheduled(fixedRate = 30000)
     public Map<String,Object> params_post(@RequestBody Integer data){
+
+        String openAi = getOpenAiValue();
+        String restart = getRestartValue();
+
         LinkedList<Double> coldsite_gap=new LinkedList<>();
         String sql_ab="select * from coldsite_gap where Equipment='server-AB' ORDER BY id DESC limit 0,20160" ;//14天数据个数 ;
         String sql_cd="select * from coldsite_gap where Equipment='server-CD' ORDER BY id DESC limit 0,20160" ;
@@ -270,6 +328,9 @@ public class AiParams_203_controller {
 //    @Scheduled(fixedRate = 30000)
     public Map<String,Object> params(){
         LinkedList<Double> coldsite_gap=new LinkedList<>();
+
+        String openAi = getOpenAiValue();
+        String restart = getRestartValue();
         String sql_ab="select * from coldsite_gap where Equipment='server-AB' ORDER BY id DESC limit 0,20160" ;//14天数据个数 ;
         String sql_cd="select * from coldsite_gap where Equipment='server-CD' ORDER BY id DESC limit 0,20160" ;
         String sql_ef="select * from coldsite_gap where Equipment='server-EF' ORDER BY id DESC limit 0,20160" ;
