@@ -38,8 +38,9 @@ public class Dataanalysis_203_controller {
 
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(formatter.format(date));
+        System.out.println(formatter.format(date));//时间格式处理
 
+        //遍历20台空调的数据
         for (int i = 1; i < 21; i++) {
             LambdaQueryWrapper<Dataanalysis_kt> andWrapper = new LambdaQueryWrapper<>();
 //                La<dataanalysis> andWrapper = new
@@ -73,6 +74,7 @@ public class Dataanalysis_203_controller {
             dto.setYSJ2(YSJ2);
             dto.setPower(power);
 
+            //把查询结果填充到列表里
             for (Dataanalysis_kt kt : list) {
                 SFD.add(kt.getSFD());
                 SF1.add(kt.getSF1());
@@ -94,6 +96,7 @@ public class Dataanalysis_203_controller {
             }
             res.add(dto);
         }
+        //把查询结果和时间返回
         kt_all.put("KT", res);
         kt_all.put("TimeLine", Time_line);
         final0.add(kt_all);
@@ -107,9 +110,11 @@ public class Dataanalysis_203_controller {
     public List<Map<String, Object>> dataanalysisnew(@RequestBody List<List<String>> data) {
 
 
+       //提取前端传来的设备类型（serverorkt）；设备编号
         String type = data.get(0).get(0);
         String Equipment = data.get(0).get(1);
 
+        //提取前端传来的开始时间和结束时间
         time_start = data.get(1).get(0);
         time_end = data.get(1).get(1);
         System.out.println(data);
@@ -129,7 +134,7 @@ public class Dataanalysis_203_controller {
             if (!time_start.equals("-1")) {
                 andWrapper.eq(Dataanalysis_kt::getEquipment, "KT" + Equipment).ge(Dataanalysis_kt::getSampleTime, time_start).lt(Dataanalysis_kt::getSampleTime, time_end);
             } else {
-                andWrapper.eq(Dataanalysis_kt::getEquipment, "KT" + Equipment).last("limit 1440");
+                andWrapper.eq(Dataanalysis_kt::getEquipment, "KT" + Equipment).last("limit 1440");//提取空调的倒数1440条数据
             }
 
         } else if (type.equals("server")) {
@@ -140,19 +145,20 @@ public class Dataanalysis_203_controller {
                 serverWrapper.eq(Dataanalysis_server::getEquipment, "server-" + Equipment).last("limit 1440");
             }
             List<Dataanalysis_server> list2;
-            list2 = serverService.list(serverWrapper);
+            list2 = serverService.list(serverWrapper);//查询服务器数据的列表
 //                System.out.println(list2);
             List<Double> server_all;
             server_all = new ArrayList<>();
 //                List<Double> server_each= new ArrayList<>();
 
-            for (Dataanalysis_server server : list2) {
+            for (Dataanalysis_server server : list2) {//遍历服务器数据，提取时间和功率
                 Time_line.add(server.getSampleTime());
                 server_all.add(server.getPower());
             }
+
+            //把服务器数据存入数据集
             Map<String, Object> server_power = new HashMap<>();
             server_power.put("server_power", server_all);
-
             kt_all.put("Server", server_power);
             kt_all.put("TimeLine", Time_line);
             final0.add(kt_all);

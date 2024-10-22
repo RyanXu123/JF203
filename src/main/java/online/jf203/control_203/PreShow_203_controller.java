@@ -14,7 +14,7 @@ public class PreShow_203_controller {
 
     @Autowired
     private JdbcTemplate jdbc;
-
+//预测值
     @CrossOrigin
     @PostMapping("/getData/203/preshownew")
     @ResponseBody
@@ -27,7 +27,7 @@ public class PreShow_203_controller {
         System.out.println(end_data);
 
 
-        String sql_power_future="select * from predata where EquipmentType='Server'  ORDER BY id DESC limit 0,10080";
+        String sql_power_future="select * from predata where EquipmentType='Server'  ORDER BY id DESC limit 0,10080";//筛选服务器预测值的10080个数据
         String sql_temperature_future="select * from predata where EquipmentType='Outside'  ORDER BY id DESC limit 0,10080";
 
         String sql_power_now="select * from preshow where EquipmentType='Server'  ORDER BY id DESC limit 0,10080";
@@ -55,7 +55,7 @@ public class PreShow_203_controller {
 
 
 
-
+        //遍历功率
         for(Map<String, Object> c:list_power_now) {
             String time0 = c.get("time").toString();
             timeline_arr.add(time0);
@@ -95,7 +95,7 @@ public class PreShow_203_controller {
         ret.put("now_power",power_arr_now);
         ret.put("timeline",timeline_arr);
         return ret;
-    }
+    }//{（future，xxxx），（now，xxxxx），（future，xxx），（now，xxxx），（timeline，xxxx）}
 
 
     @CrossOrigin
@@ -129,31 +129,31 @@ public class PreShow_203_controller {
             String time0 = c.get("time").toString();
             timeline_arr.add(time0);
         }
-        Collections.reverse(timeline_arr);
+        Collections.reverse(timeline_arr);//时间线数组
 
         for(Map<String, Object> c:list_power_now) {
             String Value0 = c.get("Value0").toString();
             power_arr_now.add(Value0);
         }
-        Collections.reverse(power_arr_now);
+        Collections.reverse(power_arr_now);//功率数组
 
         for(Map<String, Object> c:list_power_future) {
             String Value0 = c.get("Value0").toString();
             power_arr_future.add(Value0);
         }
-        Collections.reverse(power_arr_future);
+        Collections.reverse(power_arr_future);//预测功率数组
 
         for(Map<String, Object> c:list_temperature_now) {
             String Value0 = c.get("Value0").toString();
             temperature_arr_now.add(Value0);
         }
-        Collections.reverse(temperature_arr_now);
+        Collections.reverse(temperature_arr_now);//温度数组
 
         for(Map<String, Object> c:list_temperature_future) {
             String Value0 = c.get("Value0").toString();
             temperature_arr_future.add(Value0);
         }
-        Collections.reverse(temperature_arr_now);
+        Collections.reverse(temperature_arr_now);//预测功率数组
 
 
         Map<String,Object> ret= new HashMap<>();
@@ -163,6 +163,6 @@ public class PreShow_203_controller {
         ret.put("future_power",power_arr_future);
         ret.put("now_power",power_arr_now);
         ret.put("timeline",timeline_arr);
-        return ret;
+        return ret;//输出这五个数组
     }
 }

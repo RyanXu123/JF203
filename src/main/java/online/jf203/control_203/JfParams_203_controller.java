@@ -18,12 +18,13 @@ public class JfParams_203_controller {
     private JdbcTemplate jdbc;
 
 
+   //机房参数
     @CrossOrigin
     @RequestMapping("/getData/203/aipreparams")
     @ResponseBody
 //    @Scheduled(fixedRate = 30000)
     public List<Map<String,Object>> getdata203_ai(){
-        String sql="select * from aipreparams";
+        String sql="select * from aipreparams where time = (select time from aipreparams order by id desc limit 0,1)";
         List <Map<String,Object>> list=jdbc.queryForList(sql);
         List <Map<String,Object>> list1=new ArrayList<>();
         List <Map<String,Object>> list2=new ArrayList<>();
@@ -35,7 +36,7 @@ public class JfParams_203_controller {
                 list2.add(c);
             }
         }
-        return list2;
+        return list2;//{（机房总功率，xxxx），（机房空调总功率，xxxxx），（机房pue，xxxx）}
     }
 
 
@@ -44,7 +45,7 @@ public class JfParams_203_controller {
     @ResponseBody
     @Scheduled(fixedRate = 30000)
     public List<Map<String,Object>> getdata203_ai2(){
-        String sql="select * from aipreparams";
+        String sql="select * from aipreparams where time = (select time from aipreparams order by id desc limit 0,1)";
         List <Map<String,Object>> list=jdbc.queryForList(sql);
         List <Map<String,Object>> list1=new ArrayList<>();
         List <Map<String,Object>> list2=new ArrayList<>();

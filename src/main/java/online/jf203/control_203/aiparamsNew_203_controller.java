@@ -18,15 +18,14 @@ import java.util.Map;
 public class aiparamsNew_203_controller {
     @Autowired
     private logMapper logMapper;
-
+    //定义初始值
     String hot_max="26.5";
     String ai_range="1";
     String ai_time="30";
 
     String sf_up_set="24";
     String sf_down_set="26";
-
-
+    //传出AI参数
     @CrossOrigin
     @PostMapping("/getData/203/aiparams-1")
     @ResponseBody

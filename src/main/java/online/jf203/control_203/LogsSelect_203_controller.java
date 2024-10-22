@@ -14,7 +14,7 @@ import java.util.Map;
 public class LogsSelect_203_controller {
     @Autowired
     private JdbcTemplate jdbc;
-
+//筛选日志
     @CrossOrigin
     @RequestMapping("/getData/203/logs")
     @ResponseBody

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class Pswd_203_controller {
     @Autowired
     private JdbcTemplate jdbc;
-
+//密码用户管理
     @CrossOrigin
     @PostMapping("/203/password")
     @ResponseBody

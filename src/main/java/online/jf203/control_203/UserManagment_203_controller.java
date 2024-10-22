@@ -25,7 +25,7 @@ public class UserManagment_203_controller {
     private UserService userservice;
 
     @CrossOrigin
-    @PostMapping("203/UserManagmentAdd")
+    @PostMapping("203/UserManagmentAdd")//用户管理
     @ResponseBody
     public String addUser(@RequestBody User data) {
         try{

@@ -16,6 +16,7 @@ public class AiCmd_203_controller {
 
     List<Map<String,Object>> list_cmd = new ArrayList<>();//AI指令
 
+    //AI历史指令-输出所有保底控制
     @CrossOrigin
     @RequestMapping("/getData/203/aicmd_history")
     @ResponseBody
@@ -28,6 +29,7 @@ public class AiCmd_203_controller {
         return list;
 
     }
+    //AI历史指令-输出一个指定时间段的保底控制
     @CrossOrigin
     @PostMapping("/getData/203/aicmd_history")
     @ResponseBody
@@ -41,6 +43,8 @@ public class AiCmd_203_controller {
 
         return list;
     }
+
+
 
 
 
@@ -62,7 +66,9 @@ public class AiCmd_203_controller {
     @ResponseBody
 //    @Scheduled(fixedRate = 30000)
     public List<Map<String,Object>> getdata203_aicmd(){
-        String sql="select * from aicmd where CommandType <> '心跳控制' and time = ( select MAX(time) from aicmd where CommandType <> '心跳控制')" ;
+          String sql="select * from aicmd where CommandType <> '心跳控制' and time = ( select MAX(time) from aicmd where CommandType <> '心跳控制')" ;
+//select time from aidisplay order by id desc limit 0,1
+
 //        String sql2="select * from aicmd where CommandType='保底控制' " ;
         List <Map<String,Object>> list=jdbc.queryForList(sql);
 

@@ -21,7 +21,7 @@ public class AlertHistory_203_Controller {
         andWrapper.last("limit 1000");
         List <Alert> list =alertservice.list(andWrapper);
 //        return new HashMap<>();
-        return list;
+        return list;//输出1000条告警数据
     }
 
     @CrossOrigin
